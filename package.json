@@ -1,0 +1,15 @@
+{
+  "name": "inventorytrackerapi",
+  "version": "1.0.0",
+  "description": "API for Invo Track",
+  "main": "index.js",
+  "scripts": {
+    "test": "testCafe"
+  },
+  "author": "Byron",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7"
+  }
+}
