@@ -54,7 +54,7 @@ db.run(`CREATE TABLE IF NOT EXISTS "order" (
 
 const getOrders = () => {
     return new Promise((resolve, reject) => {
-        db.all("SELECT * FROM 'order'", (err, orders) => {
+        db.all("SELECT o.id, o.quantity, o.status, o.orderDate, p.name As productName, p.description, (p.price * o.quantity) As totalPrice, m.name As manufacturerName FROM 'order' o Join product p ON o.productId=p.id Join manufacturer m ON p.manufacturerId = m.id", (err, orders) => {
             if (err) {
                 reject(err);
             } else {
@@ -63,7 +63,93 @@ const getOrders = () => {
         });
     });
 };
+const createOrder = ({ productId, quantity, status }) => {
+    return new Promise((resolve, reject) => {
+        db.run(`INSERT INTO "order" (productId, quantity, status) VALUES (?, ?, ?)`, [productId, quantity, status], function (err) {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else {
+                resolve({ message: `Order created successfully` });
+            }
+        });
+    });
+};
+
+
+const deleteOrder = (orderId) => {
+    return new Promise((resolve, reject) => {
+        db.run(`DELETE FROM "order" WHERE id = ?`, [orderId], function (err) {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else {
+                resolve({ message: `Order with ID ${orderId} deleted successfully` });
+            }
+        });
+    });
+};
+
+const getAllProducts = () => {
+    return new Promise((resolve, reject) => {
+        db.all("SELECT p.id, p.name, p.description, p.price, p.manufacturerId, m.name AS manufacturerName FROM product p JOIN manufacturer m ON p.manufacturerId=m.id", (err, products) => {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else {
+                resolve(products);
+            }
+        });
+    });
+};
+
+const addProduct = (name, description, price, manufacturerId) => {
+    return new Promise((resolve, reject) => {
+        db.run(`INSERT INTO product (name, description, price, manufacturerId) VALUES (?, ?, ?, ?)`, [name, description, price, manufacturerId], function (err) {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else {
+                resolve(this.lastID);
+            }
+        });
+    });
+};
+
+const updateProduct = (productId, name, description, price, manufacturerId) => {
+    return new Promise((resolve, reject) => {
+        db.run(`UPDATE product SET name = ?, description = ?, price = ?, manufacturerId = ? WHERE id = ?`, [name, description, price, manufacturerId, productId], function (err) {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else {
+                resolve(true);
+            }
+        });
+    });
+};
+
+const getProductById = (productId) => {
+    return new Promise((resolve, reject) => {
+        db.get("SELECT * FROM product WHERE id = ?", [productId], (err, product) => {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else if (!product) {
+                reject(new Error(`Product with ID ${productId} not found`));
+            } else {
+                resolve(product);
+            }
+        });
+    });
+};
+
+const getAllManufacturers = () => {
+    return new Promise((resolve, reject) => {
+        db.all("SELECT m.id, m.name, m.city, m.address, m.contactName, m.email, m.phoneNumber,  COUNT(p.name) AS noOfProduct  FROM manufacturer m JOIN product p ON m.id = p.manufacturerId", (err, manufacturers) => {
+            if (err) {
+                reject(new Error('Internal Server Error'));
+            } else {
+                resolve(manufacturers);
+            }
+        });
+    });
+};
 
 
 
-module.exports = {getOrders};
+module.exports = {getOrders, createOrder, deleteOrder,getAllProducts, addProduct, updateProduct,getProductById, getAllManufacturers};

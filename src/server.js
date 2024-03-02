@@ -1,8 +1,8 @@
 
 const db = require('./db');
 const api = require('./api');
-
 app= api(db);
+
 
 const PORT = process.env.PORT || 5000;
 
