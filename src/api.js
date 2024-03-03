@@ -38,6 +38,7 @@ const api = (db) => {
    */
   app.post("/orders", async (req, res) => {
     const { productId, quantity, status } = req.body;
+    console.log(req.body);
     try {
       const response = await db.createOrder({ productId, quantity, status });
       res.json(response);

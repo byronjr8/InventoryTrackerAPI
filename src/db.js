@@ -64,14 +64,23 @@ const getOrders = () => {
     });
 };
 const createOrder = ({ productId, quantity, status }) => {
-    return new Promise((resolve, reject) => {
-        db.run(`INSERT INTO "order" (productId, quantity, status) VALUES (?, ?, ?)`, [productId, quantity, status], function (err) {
-            if (err) {
-                reject(new Error('Internal Server Error'));
-            } else {
-                resolve({ message: `Order created successfully` });
-            }
-        });
+    console.log({ productId, quantity, status })
+    return new Promise(async (resolve, reject) => {
+        const product= await getProductById(productId)
+        if(quantity > product.quantity){
+            reject(new Error('Quantity not available'));
+        }
+        else{
+            db.run(`UPDATE product SET quantity= ?`, [product.quantity-quantity])
+
+            db.run(`INSERT INTO "order" (productId, quantity, status) VALUES (?, ?, ?)`, [productId, quantity, status], function (err) {
+                if (err) {
+                    reject(new Error('Internal Server Error'));
+                } else {
+                    resolve({ message: `Order created successfully` });
+                }
+            });
+        }
     });
 };
 
@@ -140,7 +149,7 @@ const getProductById = (productId) => {
 
 const getAllManufacturers = () => {
     return new Promise((resolve, reject) => {
-        db.all("SELECT m.id, m.name, m.city, m.address, m.contactName, m.email, m.phoneNumber,  COUNT(p.name) AS noOfProduct  FROM manufacturer m JOIN product p ON m.id = p.manufacturerId", (err, manufacturers) => {
+        db.all("SELECT m.id, m.name, m.city, m.address, m.contactName, m.email, m.phoneNumber,  COUNT(p.name) AS noOfProduct  FROM manufacturer m JOIN product p ON m.id = p.manufacturerId GROUP BY m.id, m.name, m.city, m.address, m.contactName, m.email, m.phoneNumber", (err, manufacturers) => {
             if (err) {
                 reject(new Error('Internal Server Error'));
             } else {
