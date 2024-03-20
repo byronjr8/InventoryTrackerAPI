@@ -1,6 +1,6 @@
 
-const db = require('./db');
-const api = require('./api');
+const db = require('./db.js');
+const api = require('./api.js');
 app= api(db);
 
 
