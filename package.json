@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "apidoc": "apidoc -i src/ -o docs/",
+    "apidoc": "apidoc -i . -o docs/",
     "start": "node server.js"
   },
   "author": "Byron",

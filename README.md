@@ -1,10 +1,30 @@
-#InventoryTrackerAPI Project
+# InventoryTrackerAPI Project
 
+### Inventory
+- GET 
+- POST
+- PUT
+- DELETE
 
-to run move to the /src folder and run node server.js
+### Product
+- GET 
+- POST
+- PUT
+- DELETE
 
-to run documentation  => apidoc
+### Location
+- GET 
+- POST
+- PUT
+- DELETE
 
+## Scripts
 
-to run test =>  npm run test
+#### To Run Server
+- npm start
+#### To run documentation
+- npm run apidoc
+#### To run Test
+- npm test
+
 
