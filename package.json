@@ -4,7 +4,9 @@
   "description": "API for Invo Track",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "apidoc": "apidoc -i src/ -o docs/",
+    "start": "node server.js"
   },
   "author": "Byron",
   "license": "ISC",

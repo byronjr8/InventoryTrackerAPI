@@ -1,5 +1,5 @@
 const request = require("supertest");
-const api = require("../src/api");
+const api = require("../api");
 
 app = api({
     getAllProducts: jest.fn((x) => x), 
